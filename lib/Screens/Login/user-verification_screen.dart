@@ -65,7 +65,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   }
 
   Future<void> _handleVerify(String otp) async {
+    print('[OTP] _handleVerify called with: "$otp" (len=${otp.length})');
+
     if (otp.length != _otpLength) {
+      print('[OTP] Rejected: length != $_otpLength');
       setState(() {
         _errorText = 'Please enter the 6-digit code.';
       });
@@ -76,6 +79,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       _isVerifying = true;
       _errorText = null;
     });
+    print('[OTP] Calling authRepository.verifyOtp...');
 
     try {
       await widget.authRepository.verifyOtp(
@@ -83,9 +87,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         otp: otp,
       );
 
-      print('OTP entered: "$otp", length: ${otp.length}');
+      print('[OTP] verifyOtp SUCCEEDED');
 
-      if (!mounted) return;
+      if (!mounted) {
+        print('[OTP] Widget unmounted after success – aborting navigation');
+        return;
+      }
 
       widget.onVerified?.call();
 
@@ -94,25 +101,40 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           builder: (context) => const LoginScreen(),
         ),
       );
-    } catch (e) {
-      if (!mounted) return;
+    } catch (e, st) {
+      print('[OTP] verifyOtp FAILED');
+      print('[OTP] Error type: ${e.runtimeType}');
+      print('[OTP] Error: $e');
+      print('[OTP] Stack:\n$st');
+
+      if (!mounted) {
+        print('[OTP] Widget unmounted after error – not updating UI');
+        return;
+      }
+
+      final message = e is Exception
+          ? e.toString().replaceFirst('Exception: ', '')
+          : e.toString();
 
       setState(() {
-        _errorText = e.toString().replaceFirst('Exception: ', '');
+        _errorText =
+        message.isEmpty ? 'Verification failed. Please try again.' : message;
         _otpController.clear();
       });
+      print('[OTP] Set _errorText to: "$_errorText"');
     } finally {
       if (mounted) {
         setState(() => _isVerifying = false);
+        print('[OTP] _isVerifying set to false');
       }
     }
   }
-
 
   Future<void> _handleResend() async {
     if (_secondsRemaining > 0 || _isResending) return;
 
     setState(() => _isResending = true);
+    print('[OTP] Resending OTP to ${widget.email}');
 
     try {
       await widget.authRepository.resendOtp(email: widget.email);
@@ -121,7 +143,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         const SnackBar(content: Text('A new code has been sent to your email.')),
       );
       _startResendTimer();
+      print('[OTP] Resend succeeded');
     } catch (e) {
+      print('[OTP] Resend failed: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
@@ -201,8 +225,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     inactiveFillColor: AppColors.white,
                   ),
                   animationDuration: const Duration(milliseconds: 200),
-                  onCompleted: _handleVerify,
+                  onCompleted: (value) {
+                    print('[OTP] PinCodeTextField onCompleted: "$value"');
+                    _handleVerify(value);
+                  },
                   onChanged: (value) {
+                    print('[OTP] onChanged: "$value"');
                     if (_errorText != null) {
                       setState(() => _errorText = null);
                     }
@@ -252,9 +280,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      _secondsRemaining > 0
-                          ? "Didn't get the code? "
-                          : "Didn't get the code? ",
+                      "Didn't get the code? ",
                       style: TextStyle(fontSize: 13, color: AppColors.textGrey),
                     ),
                     if (_secondsRemaining > 0)

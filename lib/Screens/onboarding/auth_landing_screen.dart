@@ -56,6 +56,7 @@ class AuthLandingScreen extends StatelessWidget {
               Center(
                 child: Image.asset(
                   'assets/images/hansy_logo.png',
+                  color: AppColors.primaryRed,
                   height: 26,
                 ),
               ),
@@ -87,7 +88,8 @@ class AuthLandingScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text('Login', style: AppTextStyles.buttonLabel),
+                  child: Text('Login', style: AppTextStyles.buttonLabel,
+                  selectionColor: AppColors.primaryRed,),
                 ),
               ),
 
@@ -103,21 +105,26 @@ class AuthLandingScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               _MenuTile(
-                icon: Icons.call_outlined,
+                icon: Icons.call,
                 label: 'Contact Us',
                 onTap: _onContactUs,
+                backgroundColor: AppColors.white,
+
               ),
               const SizedBox(height: 10),
               _MenuTile(
-                icon: Icons.description_outlined,
+                icon: Icons.description,
                 label: 'Terms & Conditions',
                 onTap: _onTermsAndConditions,
+                backgroundColor: AppColors.white,
+
               ),
               const SizedBox(height: 10),
               _MenuTile(
                 icon: Icons.shield_outlined,
                 label: 'Privacy Policy',
                 onTap: _onPrivacyPolicy,
+                backgroundColor: AppColors.white,
               ),
 
               const SizedBox(height: 24),
@@ -135,12 +142,14 @@ class AuthLandingScreen extends StatelessWidget {
                 icon: Icons.info_outline,
                 label: 'About us',
                 onTap: _onAboutUs,
+                backgroundColor: AppColors.white,
               ),
               const SizedBox(height: 10),
               _MenuTile(
                 icon: Icons.star_border,
                 label: 'Rate our app',
                 onTap: _onRateOurApp,
+                backgroundColor: AppColors.white,
               ),
 
               const SizedBox(height: 24),
@@ -158,7 +167,7 @@ class AuthLandingScreen extends StatelessWidget {
                     Text(
                       'Contact us with',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: AppColors.submitRed,
                       ),
@@ -209,57 +218,85 @@ class _MenuTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+  final Color? backgroundColor;
 
   const _MenuTile({
     required this.icon,
     required this.label,
     required this.onTap,
+    required this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.inputBorder),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: const BoxDecoration(
-                  color: AppColors.iconCircleBg,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, size: 16, color: AppColors.submitRed),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.black,
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(14)
+          boxShadow: [
+            BoxShadow(
+          color: Colors.black.withOpacity(0.04),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+      ),
+          ],
+      ),
+      child: Column(
+        children: [
+          for (int i=0; i < SettinsGroup.length; i++) ...[
+            children[i],
+            if (i != children.length -1)
+              Divider(
+                height: 1,
+                thickness: 1,
+                indent: 16,
+                endIndent: 16,
+                color: AppColors.inputBorder,
+    )
+    ] 
+            // child: Padding(
+            //   padding: const EdgeInsets.only(bottom:12),
+            //   child: Material(
+            //     color: AppColors.white,
+            //     borderRadius: BorderRadius.circular(12),
+            //     child: InkWell(
+            //       borderRadius: BorderRadius.circular(12),
+            //       onTap: onTap,
+            //       child: Row(
+            //         children: [
+            //           Padding(
+            //             padding: const EdgeInsets.all(10),
+            //             child: Icon(icon, size: 20, color: AppColors.submitRed),
+            //           ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ),
+                        ),
+                      ),
+                      Icon(Icons.chevron_right, size: 20, color: AppColors.textGrey),
+                    ],
                   ),
-                ),
-              ),
-              Icon(Icons.chevron_right, size: 20, color: AppColors.textGrey),
-            ],
+        ],
+      ),
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+ class SettingsGroup extends StatelessWidget{
+  final List<Widget> children;
+  
+  const SettingsGroup ({super.key, required this.children});
+
 
 class _SocialIconButton extends StatelessWidget {
   final IconData icon;
@@ -283,3 +320,4 @@ class _SocialIconButton extends StatelessWidget {
     );
   }
 }
+

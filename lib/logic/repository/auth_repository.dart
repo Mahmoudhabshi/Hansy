@@ -109,11 +109,14 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  @override
   Future<UserLoginResponseModel> verifyOtp({
     required String email,
     required String otp,
   }) async {
     try {
+      print('[AuthRepo] verifyOtp → email=$email, token=$otp');
+
       final response = await _dio.post(
         '/user-verification',
         data: {
@@ -125,18 +128,42 @@ class AuthRepositoryImpl implements AuthRepository {
         }),
       );
 
-      print(response.data);
+      print('[AuthRepo] statusCode: ${response.statusCode}');
+      print('[AuthRepo] response.data: ${response.data}');
+
+      final data = response.data;
+
+      // Guard against 200 + error payload
+      if (data is Map<String, dynamic>) {
+        final status = data['status'];
+        final success = data['success'];
+        final message = data['message'] ?? data['error'] ?? data['msg'];
+
+        // Adjust these keys to match your real API
+        if (status == false ||
+            status == 'error' ||
+            success == false ||
+            (message != null &&
+                (data['data'] == null && data['user'] == null))) {
+          print('[AuthRepo] Treating as business error: $message');
+          throw Exception(message?.toString() ?? 'Invalid verification code.');
+        }
+      }
 
       final model = UserLoginResponseModel.fromJson(
-        response.data as Map<String, dynamic>,
+        data as Map<String, dynamic>,
       );
 
-      // await _persistSession(model);
-
+      print('[AuthRepo] verifyOtp parsed model OK');
       return model;
     } on DioException catch (e) {
+      print('[AuthRepo] DioException type: ${e.type}');
+      print('[AuthRepo] statusCode: ${e.response?.statusCode}');
+      print('[AuthRepo] response.data: ${e.response?.data}');
       throw _mapDioError(e);
-    } catch (e) {
+    } catch (e, st) {
+      print('[AuthRepo] Unexpected error: $e');
+      print(st);
       throw Exception('Failed to process verification response: $e');
     }
   }

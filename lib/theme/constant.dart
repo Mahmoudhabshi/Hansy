@@ -10,7 +10,7 @@ class AppColors {
   AppColors._(); // prevent instantiation
 
   static const Color background = Color(0xFF3B0A0A); // dark maroon
-  static const Color primaryRed = Color(0xFFE63946); // logo / accent red
+  static const Color primaryRed = Color(0xFFB12028); // logo / accent red
   static const Color white = Colors.white;
   static const Color black = Colors.black;
   static const Color onboardingBg = Colors.white;
@@ -22,7 +22,7 @@ class AppColors {
   static const Color inputBorder = Color(0xFFE0E0E0);
   static const Color placeholderGrey = Color(0xFF9E9E9E);
   static const Color arrowInactive = Color(0xFFBDBDBD); // disabled back arrow
-  static const Color skipGrey = Color(0xFF8A8A8A);
+  static const Color skipGrey = Color(0xFF000000);
   static const Color iconCircleBg = Color(0xFFFCEBEC); // light pink icon background
 }
 

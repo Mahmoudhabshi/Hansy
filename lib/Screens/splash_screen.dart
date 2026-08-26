@@ -23,7 +23,7 @@ class SplashScreen extends StatelessWidget {
         listener: (context, state) {
           if (state.status == SplashStatus.goToOnboarding) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const OnboardingScreenOne()),
+              MaterialPageRoute(builder: (context) => const OnboardingScreen()),
             );
           } else if (state.status == SplashStatus.goToHome) {
             Navigator.of(context).pushReplacement(
