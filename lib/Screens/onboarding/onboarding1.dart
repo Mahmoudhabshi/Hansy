@@ -4,6 +4,7 @@ import 'package:hansy/theme/constant.dart';
 import 'package:hansy/Screens/onboarding/auth_landing_screen.dart';
 import 'package:hansy/logic/cubit/onboarding/onboarding_cubit.dart';
 import 'package:hansy/logic/cubit/onboarding/onboarding_state.dart';
+import 'package:hansy/Screens/HomeScreen.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -76,11 +77,16 @@ class _OnboardingViewState extends State<_OnboardingView> {
             // Skip only makes sense after the first page (or always — your choice)
             if (_currentPage > 0)
               Padding(
-                padding: const EdgeInsets.only(top: 8, right: 24),
+                padding: const EdgeInsets.only(top: 60, right: 24),
                 child: Align(
                   alignment: Alignment.topRight,
                   child: GestureDetector(
-                    onTap: () => context.read<OnboardingCubit>().finishOnboarding(),
+                    onTap: () {
+                       Navigator.of(context).push(
+                         MaterialPageRoute(
+                           builder: (context) => const Homescreen(),)
+                       );
+                    } ,
                     child: Text(
                       'Skip',
                       style: TextStyle(
@@ -93,7 +99,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
                 ),
               )
             else
-              const SizedBox(height: 32), // keeps layout stable
+              const SizedBox(height: 8), // keeps layout stable
 
             // Carousel
             Expanded(

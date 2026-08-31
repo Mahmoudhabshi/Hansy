@@ -267,15 +267,26 @@ class _LoginViewState extends State<_LoginView> {
 
                   _SocialButton(
                     label: 'Continue with Google',
-                    icon: const Icon(Icons.g_mobiledata_rounded, color: Color(0xFF1877F2), size: 22),
+                    // icon: const Icon(Icons.g_mobiledata_rounded, color: Color(0xFF1877F2), size: 22),
+                    icon: Image.asset(
+                      'assets/images/google.png',
+                      width: 20,
+                      height: 20,
+                    ),
                     onTap: _onContinueWithGoogle,
+
                   ),
 
                   const SizedBox(height: 14),
 
                   _SocialButton(
                     label: 'Continue with Facebook',
-                    icon: const Icon(Icons.facebook, color: Color(0xFF1877F2), size: 22),
+                    // icon: const Icon(Icons.facebook, color: Color(0xFF1877F2), size: 22),
+                    icon: Image.asset(
+                        'assets/images/facebook.png',
+                        width: 20,
+                        height: 20),
+
                     onTap: _onContinueWithFacebook,
                   ),
 

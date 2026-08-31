@@ -27,7 +27,7 @@ class SplashScreen extends StatelessWidget {
             );
           } else if (state.status == SplashStatus.goToHome) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(builder: (context) => Homescreen()),
             );
           }
         },
