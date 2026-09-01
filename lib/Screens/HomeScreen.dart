@@ -292,7 +292,7 @@ class _HomeHeader extends StatelessWidget {
         color: AppColors.background,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
         image: DecorationImage(
-          image: const AssetImage('assets/images/home/header_bg.jpg'),
+          image: const AssetImage('assets/images/'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             AppColors.background.withOpacity(0.55),

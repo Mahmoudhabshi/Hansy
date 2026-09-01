@@ -10,8 +10,7 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> loadHomeData() async {
     emit(state.copyWith(isLoading: true));
 
-    // TODO: replace with a real API call (e.g. GET /home or separate
-    // endpoints for categories/properties/developers/compounds).
+    
     await Future.delayed(const Duration(milliseconds: 600));
 
     emit(state.copyWith(
@@ -74,8 +73,15 @@ class HomeCubit extends Cubit<HomeState> {
         DeveloperItem(name: '', logoPath: 'assets/images/Top_developers/mountain_view.png'),
         DeveloperItem(name: '', logoPath: 'assets/images/Top_developers/palm_hills.png'),
         DeveloperItem(name: '', logoPath: 'assets/images/Top_developers/orascom.png'),
+        DeveloperItem(name: '', logoPath: 'assets/images/Top_developers/top1.png'),
+        DeveloperItem(name: '', logoPath: 'assets/images/Top_developers/elsewhere.png'),
+        DeveloperItem(name: '', logoPath: 'assets/images/Top_developers/mountain_view.png'),
+        DeveloperItem(name: '', logoPath: 'assets/images/Top_developers/palm_hills.png'),
+        DeveloperItem(name: '', logoPath: 'assets/images/Top_developers/orascom.png'),
       ],
       topCompounds: const [
+        CompoundItem(name: 'Palm Hills', imagePath: 'assets/images/top_compounds/palmhillsTC.png', propertiesCount: 515),
+        CompoundItem(name: 'Mountain View', imagePath: 'assets/images/top_compounds/mountainviewTC.png', propertiesCount: 515),
         CompoundItem(name: 'Palm Hills', imagePath: 'assets/images/top_compounds/palmhillsTC.png', propertiesCount: 515),
         CompoundItem(name: 'Mountain View', imagePath: 'assets/images/top_compounds/mountainviewTC.png', propertiesCount: 515),
       ],
@@ -103,6 +109,5 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> verifyAgentPhone(String phone) async {
-    // TODO: call your real "verify agent" endpoint with this phone number.
   }
 }
