@@ -399,7 +399,7 @@ class _PromoCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             AppColors.primaryRed,
-            AppColors.background,
+            AppColors.background, 
           ],
         ),
         borderRadius: BorderRadius.circular(20),
