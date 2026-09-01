@@ -10,7 +10,7 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> loadHomeData() async {
     emit(state.copyWith(isLoading: true));
 
-    
+
     await Future.delayed(const Duration(milliseconds: 600));
 
     emit(state.copyWith(
