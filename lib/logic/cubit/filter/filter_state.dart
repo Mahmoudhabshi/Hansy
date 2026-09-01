@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 
 class FilterState {
-  final String listingType; // 'Buy' | 'Sell' | 'Rent'
-  final String locationMode; // 'Area' | 'Compound'
+  final String listingType;
+  final String locationMode;
   final String locationQuery;
   final String developerQuery;
 
@@ -84,9 +84,7 @@ class FilterState {
   }
 }
 
-/// Plain result object handed back via Navigator.pop() once the user
-/// taps "Show All Results". Kept separate from FilterState so the
-/// caller doesn't need to depend on the cubit's internal state shape.
+
 class PropertyFilterResult {
   final String listingType;
   final String locationMode;

@@ -28,7 +28,6 @@ class FilterCubit extends Cubit<FilterState> {
   }
 
   void selectPropertyType(String type) {
-    // Tapping the already-selected type deselects it.
     if (state.selectedPropertyType == type) {
       emit(state.copyWith(clearPropertyType: true));
     } else {
@@ -88,8 +87,7 @@ class FilterCubit extends Cubit<FilterState> {
     emit(const FilterState());
   }
 
-  /// Builds the plain result object to hand back via Navigator.pop()
-  /// once the user taps "Show All Results".
+
   PropertyFilterResult buildResult() {
     return PropertyFilterResult(
       listingType: state.listingType,

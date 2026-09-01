@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hansy/Screens/filterscreen.dart';
 import 'package:hansy/theme/constant.dart';
 import 'package:hansy/logic/cubit/home/home_cubit.dart';
 import 'package:hansy/logic/cubit/home/home_state.dart';
@@ -363,7 +364,12 @@ class _HomeHeader extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               GestureDetector(
-                onTap: onFilterTap,
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const FilterScreen(),)
+                  );
+                },
                 child: Container(
                   width: 46,
                   height: 46,

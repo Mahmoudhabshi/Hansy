@@ -9,21 +9,22 @@ import 'package:google_fonts/google_fonts.dart';
 class AppColors {
   AppColors._(); // prevent instantiation
 
-  static const Color background = Color(0xFF3B0A0A); // dark maroon
-  static const Color primaryRed = Color(0xFFB12028); // logo / accent red
+  static const Color background = Color(0xFF3B0A0A);
+  static const Color primaryRed = Color(0xFFB12028);
   static const Color white = Colors.white;
   static const Color black = Colors.black;
   static const Color onboardingBg = Colors.white;
-  static const Color accentBlue = Color(0xFF2F9BF0); // "Next" button blue
+  static const Color accentBlue = Color(0xFF2F9BF0);
   static const Color textDark = Color(0xFF1A1A1A);
   static const Color textGrey = Color(0xFF6B6B6B);
   static const Color dotInactive = Color(0xFFD9D9D9);
-  static const Color submitRed = Color(0xFFA31D2C); // login "Submit" button
+  static const Color submitRed = Color(0xFFA31D2C);
   static const Color inputBorder = Color(0xFFE0E0E0);
   static const Color placeholderGrey = Color(0xFF9E9E9E);
-  static const Color arrowInactive = Color(0xFFBDBDBD); // disabled back arrow
+  static const Color arrowInactive = Color(0xFFBDBDBD);
   static const Color skipGrey = Color(0xFF000000);
-  static const Color iconCircleBg = Color(0xFFFCEBEC); // light pink icon background
+  static const Color iconCircleBg = Color(0xFFFCEBEC);
+  static const Color silver = Color(0x7B7B7B);
 }
 
 /// ============================================================
