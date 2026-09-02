@@ -70,221 +70,218 @@ class _HomeViewState extends State<_HomeView> {
 
           final cubit = context.read<HomeCubit>();
 
-          return SafeArea(
-            bottom: false,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _HomeHeader(
-                    controller: _searchController,
-                    onFilterTap: _onFilterTap,
-                    onSearchChanged: cubit.updateSearchQuery,
-                  ),
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _HomeHeader(
+                  controller: _searchController,
+                  onFilterTap: _onFilterTap,
+                  onSearchChanged: cubit.updateSearchQuery,
+                ),
 
-                  Transform.translate(
-                    offset: const Offset(0, -20),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 16),
+                Transform.translate(
+                  offset: const Offset(0, -20),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16),
 
-                          if (state.promoBanner != null)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: _PromoCard(
-                                promo: state.promoBanner!,
-                                onButtonTap: _onContactUs,
-                              ),
-                            ),
-
-                          const SizedBox(height: 24),
-
-                          _SectionHeader(title: 'All Category', onViewAll: _onViewAllCategories),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            height: 100,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              itemCount: state.categories.length,
-                              separatorBuilder: (_, __) => const SizedBox(width: 12),
-                              itemBuilder: (context, index) {
-                                return _CategoryThumbnail(category: state.categories[index]);
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          SizedBox(
-                            height: 100,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              itemCount: state.infoCards.length,
-                              separatorBuilder: (_, __) => const SizedBox(width: 12),
-                              itemBuilder: (context, index) {
-                                return _InfoCard(info: state.infoCards[index]);
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              'Recommended Property',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          if (state.recommendedProperties.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: _PropertyCard(
-                                property: state.recommendedProperties.first,
-                                onFavoriteTap: () => cubit.toggleFavorite(state.recommendedProperties.first.id),
-                                onCallTap: () => _onCallTap(state.recommendedProperties.first.agentPhone),
-                                onWhatsappTap: () => _onWhatsappTap(state.recommendedProperties.first.agentWhatsapp),
-                                onViewDetailsTap: _onViewPropertyDetails,
-                              ),
-                            ),
-                          const SizedBox(height: 12),
-                          Center(
-                            child: GestureDetector(
-                              onTap: _onSeeAllProperties,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text('See All Properties', style: TextStyle(fontSize: 13, color: AppColors.black, fontWeight: FontWeight.w600)),
-                                  const SizedBox(width: 2),
-                                  const Icon(Icons.expand_more, size: 16, color: AppColors.black),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              'Top Developers',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            height: 50,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              itemCount: state.topDevelopers.length,
-                              separatorBuilder: (_, __) => const SizedBox(width: 24),
-                              itemBuilder: (context, index) {
-                                return _DeveloperLogo(developer: state.topDevelopers[index]);
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              'Top Compounds',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            height: 150,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              itemCount: state.topCompounds.length,
-                              separatorBuilder: (_, __) => const SizedBox(width: 14),
-                              itemBuilder: (context, index) {
-                                return _CompoundCard(
-                                  compound: state.topCompounds[index],
-                                  onExploreTap: () => _onExploreCompound(state.topCompounds[index]),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Center(
-                            child: GestureDetector(
-                              onTap: _onViewAllCompounds,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text('View All', style: TextStyle(fontSize: 13, color: AppColors.black, fontWeight: FontWeight.w600)),
-                                  const SizedBox(width: 2),
-                                  const Icon(Icons.expand_more, size: 16, color: AppColors.black),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
+                        if (state.promoBanner != null)
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: _AgentVerificationCard(onVerify: cubit.verifyAgentPhone),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              'Our Services',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                            child: _PromoCard(
+                              promo: state.promoBanner!,
+                              onButtonTap: _onContactUs,
                             ),
                           ),
-                          const SizedBox(height: 12),
+
+                        const SizedBox(height: 24),
+
+                        _SectionHeader(title: 'All Category', onViewAll: _onViewAllCategories),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 100,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            itemCount: state.categories.length,
+                            separatorBuilder: (_, __) => const SizedBox(width: 12),
+                            itemBuilder: (context, index) {
+                              return _CategoryThumbnail(category: state.categories[index]);
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        SizedBox(
+                          height: 100,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            itemCount: state.infoCards.length,
+                            separatorBuilder: (_, __) => const SizedBox(width: 12),
+                            itemBuilder: (context, index) {
+                              return _InfoCard(info: state.infoCards[index]);
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            'Recommended Property',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        if (state.recommendedProperties.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: _PropertyCard(
+                              property: state.recommendedProperties.first,
+                              onFavoriteTap: () => cubit.toggleFavorite(state.recommendedProperties.first.id),
+                              onCallTap: () => _onCallTap(state.recommendedProperties.first.agentPhone),
+                              onWhatsappTap: () => _onWhatsappTap(state.recommendedProperties.first.agentWhatsapp),
+                              onViewDetailsTap: _onViewPropertyDetails,
+                            ),
+                          ),
+                        const SizedBox(height: 12),
+                        Center(
+                          child: GestureDetector(
+                            onTap: _onSeeAllProperties,
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                for (int i = 0; i < state.services.length; i++) ...[
-                                  Expanded(
-                                    child: _ServiceGridItem(
-                                      service: state.services[i],
-                                      onTap: () => _onServiceTap(state.services[i]),
-                                    ),
-                                  ),
-                                  if (i != state.services.length - 1) const SizedBox(width: 12),
-                                ],
+                                Text('See All Properties', style: TextStyle(fontSize: 13, color: AppColors.black, fontWeight: FontWeight.w600)),
+                                const SizedBox(width: 2),
+                                const Icon(Icons.expand_more, size: 16, color: AppColors.black),
                               ],
                             ),
                           ),
+                        ),
 
-                          const SizedBox(height: 24),
+                        const SizedBox(height: 24),
 
-                          Padding(
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            'Top Developers',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 50,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: _JoinNetworkCard(
-                              onApplyTap: _onApplyToBeMember,
-                              onWhatsappTap: () => _onWhatsappTap(null),
+                            itemCount: state.topDevelopers.length,
+                            separatorBuilder: (_, __) => const SizedBox(width: 24),
+                            itemBuilder: (context, index) {
+                              return _DeveloperLogo(developer: state.topDevelopers[index]);
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            'Top Compounds',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 150,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            itemCount: state.topCompounds.length,
+                            separatorBuilder: (_, __) => const SizedBox(width: 14),
+                            itemBuilder: (context, index) {
+                              return _CompoundCard(
+                                compound: state.topCompounds[index],
+                                onExploreTap: () => _onExploreCompound(state.topCompounds[index]),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Center(
+                          child: GestureDetector(
+                            onTap: _onViewAllCompounds,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('View All', style: TextStyle(fontSize: 13, color: AppColors.black, fontWeight: FontWeight.w600)),
+                                const SizedBox(width: 2),
+                                const Icon(Icons.expand_more, size: 16, color: AppColors.black),
+                              ],
                             ),
                           ),
+                        ),
 
-                          const SizedBox(height: 24),
-                        ],
-                      ),
+                        const SizedBox(height: 24),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: _AgentVerificationCard(onVerify: cubit.verifyAgentPhone),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            'Our Services',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: [
+                              for (int i = 0; i < state.services.length; i++) ...[
+                                Expanded(
+                                  child: _ServiceGridItem(
+                                    service: state.services[i],
+                                    onTap: () => _onServiceTap(state.services[i]),
+                                  ),
+                                ),
+                                if (i != state.services.length - 1) const SizedBox(width: 12),
+                              ],
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: _JoinNetworkCard(
+                            onApplyTap: _onApplyToBeMember,
+                            onWhatsappTap: () => _onWhatsappTap(null),
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },
@@ -394,7 +391,6 @@ class _HomeHeader extends StatelessWidget {
   }
 }
 
-/// The red "Join The Hansy Circle ." promo card.
 class _PromoCard extends StatelessWidget {
   final PromoBanner promo;
   final VoidCallback onButtonTap;
@@ -411,8 +407,8 @@ class _PromoCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFFE23744), // brighter red
-            AppColors.background, // dark maroon
+            AppColors.primaryRed,
+            AppColors.background,
           ],
         ),
         borderRadius: BorderRadius.circular(20),
@@ -485,7 +481,6 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// Rectangular photo thumbnail for a category, with label below.
 class _CategoryThumbnail extends StatelessWidget {
   final CategoryItem category;
 
@@ -525,7 +520,6 @@ class _CategoryThumbnail extends StatelessWidget {
   }
 }
 
-/// "Find Homes Near You" / "Special Investment" style info card.
 class _InfoCard extends StatelessWidget {
   final InfoCardItem info;
 
@@ -537,8 +531,15 @@ class _InfoCard extends StatelessWidget {
       width: 220,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.iconCircleBg,
         borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.iconCircleBg,
+            AppColors.white,
+          ],
+        ),
       ),
       child: Row(
         children: [
@@ -936,10 +937,10 @@ class _JoinNetworkCard extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppColors.background,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(20),
             image: DecorationImage(
-              image: const AssetImage('assets/images/home/network_bg.jpg'),
+              image: const AssetImage('assets/images/'),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(AppColors.background.withOpacity(0.75), BlendMode.darken),
               onError: (_, __) {},
@@ -950,13 +951,13 @@ class _JoinNetworkCard extends StatelessWidget {
               const Text(
                 'Join Our Real Estate Network',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w700),
+                style: TextStyle(color: AppColors.black, fontSize: 16, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 8),
               Text(
                 'Become a certified member and unlock exclusive tools, listings, and growth opportunities in the real estate industry.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.white.withOpacity(0.85), fontSize: 12),
+                style: TextStyle(color: AppColors.textGrey.withOpacity(0.85), fontSize: 12),
               ),
               const SizedBox(height: 16),
               SizedBox(
@@ -965,8 +966,8 @@ class _JoinNetworkCard extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: onApplyTap,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.white,
-                    foregroundColor: AppColors.submitRed,
+                    backgroundColor: AppColors.primaryRed,
+                    foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('Apply to be Hansy Member', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),

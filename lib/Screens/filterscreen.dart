@@ -98,7 +98,6 @@ class _FilterViewState extends State<_FilterView> {
       ),
       body: BlocBuilder<FilterCubit, FilterState>(
         builder: (context, state) {
-          // Keep text controllers in sync if resetAll() clears the state.
           if (_locationController.text != state.locationQuery) {
             _locationController.value = _locationController.value.copyWith(text: state.locationQuery);
           }
@@ -106,317 +105,311 @@ class _FilterViewState extends State<_FilterView> {
             _developerController.value = _developerController.value.copyWith(text: state.developerQuery);
           }
 
-          return SafeArea(
-            top: false,
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _ListingTypeTabs(
-                          types: _listingTypes,
-                          selected: state.listingType,
-                          onSelected: cubit.selectListingType,
-                        ),
-                        const SizedBox(height: 16),
+          return Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _ListingTypeTabs(
+                        types: _listingTypes,
+                        selected: state.listingType,
+                        onSelected: cubit.selectListingType,
+                      ),
+                      const SizedBox(height: 16),
 
-                        _FilterCard(
-                          title: 'Location',
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: _locationModes.map((mode) {
-                                  final isSelected = mode == state.locationMode;
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: _PillToggle(
-                                      label: mode,
-                                      icon: mode == 'Area' ? Icons.place_outlined : Icons.apartment,
-                                      isSelected: isSelected,
-                                      onTap: () => cubit.selectLocationMode(mode),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                              const SizedBox(height: 12),
-                              _SearchField(
-                                controller: _locationController,
-                                hint: 'e.g. New Cairo, Zayed, etc.',
-                                onChanged: cubit.updateLocationQuery,
-                              ),
-                            ],
-                          ),
+                      _FilterCard(
+                        title: 'Location',
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: _locationModes.map((mode) {
+                                final isSelected = mode == state.locationMode;
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: _PillToggle(
+                                    label: mode,
+                                    icon: mode == 'Area' ? Icons.place_outlined : Icons.apartment,
+                                    isSelected: isSelected,
+                                    onTap: () => cubit.selectLocationMode(mode),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            const SizedBox(height: 12),
+                            _SearchField(
+                              controller: _locationController,
+                              hint: 'e.g. New Cairo, Zayed, etc.',
+                              onChanged: cubit.updateLocationQuery,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
-                        _FilterCard(
-                          title: 'Developer',
-                          child: _SearchField(
-                            controller: _developerController,
-                            hint: 'Search Developer',
-                            onChanged: cubit.updateDeveloperQuery,
-                          ),
+                      _FilterCard(
+                        title: 'Developer',
+                        child: _SearchField(
+                          controller: _developerController,
+                          hint: 'Search Developer',
+                          onChanged: cubit.updateDeveloperQuery,
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
-                        _FilterCard(
-                          title: 'Category',
-                          child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: _categoryOptions.map((label) {
-                              final isSelected = state.selectedCategories.contains(label);
-                              return _ChoiceChip(
-                                label: label,
-                                isSelected: isSelected,
-                                onTap: () => cubit.toggleCategory(label),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        Text('Property Type', style: _sectionTitleStyle),
-                        const SizedBox(height: 12),
-                        GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 20,
-                          childAspectRatio: 0.85,
-                          children: _propertyTypes.map((type) {
-                            final isSelected = type.label == state.selectedPropertyType;
-                            return _PropertyTypeTile(
-                              label: type.label,
-                              icon: type.icon,
+                      _FilterCard(
+                        title: 'Category',
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _categoryOptions.map((label) {
+                            final isSelected = state.selectedCategories.contains(label);
+                            return _ChoiceChip(
+                              label: label,
                               isSelected: isSelected,
-                              onTap: () => cubit.selectPropertyType(type.label),
+                              onTap: () => cubit.toggleCategory(label),
                             );
                           }).toList(),
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 20),
 
-                        _FilterCard(
-                          title: 'Finishing',
-                          child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: _finishingOptions.map((label) {
-                              final isSelected = state.selectedFinishing.contains(label);
-                              return _ChoiceChip(
-                                label: label,
-                                isSelected: isSelected,
-                                onTap: () => cubit.toggleFinishing(label),
-                              );
-                            }).toList(),
-                          ),
+                      Text('Property Type', style: _sectionTitleStyle),
+                      const SizedBox(height: 12),
+                      GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                        childAspectRatio: 0.85,
+                        children: _propertyTypes.map((type) {
+                          final isSelected = type.label == state.selectedPropertyType;
+                          return _PropertyTypeTile(
+                            label: type.label,
+                            icon: type.icon,
+                            isSelected: isSelected,
+                            onTap: () => cubit.selectPropertyType(type.label),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 16),
+
+                      _FilterCard(
+                        title: 'Finishing',
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _finishingOptions.map((label) {
+                            final isSelected = state.selectedFinishing.contains(label);
+                            return _ChoiceChip(
+                              label: label,
+                              isSelected: isSelected,
+                              onTap: () => cubit.toggleFinishing(label),
+                            );
+                          }).toList(),
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
-                        _FilterCard(
-                          title: 'Key Features',
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: _keyFeatureOptions.map((feature) {
-                                  final isSelected = state.selectedKeyFeatures.contains(feature.label);
-                                  return _ChoiceChip(
-                                    label: feature.label,
-                                    icon: feature.icon,
-                                    isSelected: isSelected,
-                                    onTap: () => cubit.toggleKeyFeature(feature.label),
-                                  );
-                                }).toList(),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Select all that apply to your property',
-                                style: TextStyle(fontSize: 11, color: AppColors.textGrey),
-                              ),
-                            ],
-                          ),
+                      _FilterCard(
+                        title: 'Key Features',
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: _keyFeatureOptions.map((feature) {
+                                final isSelected = state.selectedKeyFeatures.contains(feature.label);
+                                return _ChoiceChip(
+                                  label: feature.label,
+                                  icon: feature.icon,
+                                  isSelected: isSelected,
+                                  onTap: () => cubit.toggleKeyFeature(feature.label),
+                                );
+                              }).toList(),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Select all that apply to your property',
+                              style: TextStyle(fontSize: 11, color: AppColors.textGrey),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
-                        _FilterCard(
-                          title: 'Property Size',
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: _Dropdown(
-                                  hint: 'From',
-                                  value: state.sizeFrom,
-                                  options: _sizeOptions,
-                                  onChanged: cubit.selectSizeFrom,
-                                ),
+                      _FilterCard(
+                        title: 'Property Size',
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _Dropdown(
+                                hint: 'From',
+                                value: state.sizeFrom,
+                                options: _sizeOptions,
+                                onChanged: cubit.selectSizeFrom,
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: _Dropdown(
-                                  hint: 'To',
-                                  value: state.sizeTo,
-                                  options: _sizeOptions,
-                                  onChanged: cubit.selectSizeTo,
-                                ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _Dropdown(
+                                hint: 'To',
+                                value: state.sizeTo,
+                                options: _sizeOptions,
+                                onChanged: cubit.selectSizeTo,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
-                        _FilterCard(
-                          title: 'Price Range',
-                          child: Column(
-                            children: [
-                              RangeSlider(
-                                values: state.priceRange,
-                                min: _priceMin,
-                                max: _priceMax,
-                                activeColor: AppColors.submitRed,
-                                inactiveColor: AppColors.inputBorder,
-                                onChanged: cubit.updatePriceRange,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('\$${state.priceRange.start.round()}', style: TextStyle(fontSize: 12, color: AppColors.textDark)),
-                                    Text('\$${state.priceRange.end.round()}', style: TextStyle(fontSize: 12, color: AppColors.textDark)),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
+                      _FilterCard(
+                        title: 'Price Range',
+                        child: Column(
+                          children: [
+                            RangeSlider(
+                              values: state.priceRange,
+                              min: _priceMin,
+                              max: _priceMax,
+                              activeColor: AppColors.submitRed,
+                              inactiveColor: AppColors.inputBorder,
+                              onChanged: cubit.updatePriceRange,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(
-                                    child: _Dropdown(
-                                      hint: 'Min',
-                                      value: state.priceMin,
-                                      options: _priceMinOptions,
-                                      onChanged: cubit.selectPriceMin,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: _Dropdown(
-                                      hint: 'Max',
-                                      value: state.priceMax,
-                                      options: _priceMaxOptions,
-                                      onChanged: cubit.selectPriceMax,
-                                    ),
-                                  ),
+                                  Text('\$${state.priceRange.start.round()}', style: TextStyle(fontSize: 12, color: AppColors.textDark)),
+                                  Text('\$${state.priceRange.end.round()}', style: TextStyle(fontSize: 12, color: AppColors.textDark)),
                                 ],
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _Dropdown(
+                                    hint: 'Min',
+                                    value: state.priceMin,
+                                    options: _priceMinOptions,
+                                    onChanged: cubit.selectPriceMin,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _Dropdown(
+                                    hint: 'Max',
+                                    value: state.priceMax,
+                                    options: _priceMaxOptions,
+                                    onChanged: cubit.selectPriceMax,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
-                        _FilterCard(
-                          title: 'Bedrooms',
-                          child: _NumberSelectorRow(
-                            options: _bedroomOptions,
-                            selected: state.selectedBedrooms,
-                            onSelected: cubit.selectBedrooms,
-                          ),
+                      _FilterCard(
+                        title: 'Bedrooms',
+                        child: _NumberSelectorRow(
+                          options: _bedroomOptions,
+                          selected: state.selectedBedrooms,
+                          onSelected: cubit.selectBedrooms,
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
-                        _FilterCard(
-                          title: 'Rooms',
-                          child: _NumberSelectorRow(
-                            options: _roomOptions,
-                            selected: state.selectedRooms,
-                            onSelected: cubit.selectRooms,
-                          ),
+                      _FilterCard(
+                        title: 'Rooms',
+                        child: _NumberSelectorRow(
+                          options: _roomOptions,
+                          selected: state.selectedRooms,
+                          onSelected: cubit.selectRooms,
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Bottom action bar
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, -2)),
+                      ),
                     ],
                   ),
-                  child: SafeArea(
-                    top: false,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
+                ),
+              ),
+
+              // Bottom action bar
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, -2)),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 48,
+                        child: OutlinedButton(
+                          onPressed: cubit.resetAll,
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.submitRed),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: Text(
+                            'Reset All',
+                            style: TextStyle(color: AppColors.submitRed, fontWeight: FontWeight.w700, fontSize: 13),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          SizedBox(
                             height: 48,
-                            child: OutlinedButton(
-                              onPressed: cubit.resetAll,
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: AppColors.submitRed),
+                            child: ElevatedButton(
+                              onPressed: () => Navigator(),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.submitRed,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               ),
-                              child: Text(
-                                'Reset All',
-                                style: TextStyle(color: AppColors.submitRed, fontWeight: FontWeight.w700, fontSize: 13),
+                              child: const Text(
+                                'Show All Results',
+                                style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w700, fontSize: 13),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          flex: 2,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              SizedBox(
-                                height: 48,
-                                child: ElevatedButton(
-                                  onPressed: () => Navigator(),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.submitRed,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                  ),
-                                  child: const Text(
-                                    'Show All Results',
-                                    style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w700, fontSize: 13),
-                                  ),
-                                ),
-                              ),
-                              // Positioned(
-                              //   right: -6,
-                              //   top: -6,
-                              //   bottom: -6,
-                              //   child: GestureDetector(
-                              //     onTap: _onWhatsappTap,
-                              //     child: Container(
-                              //       width: 32,
-                              //       height: 32,
-                              //       margin: const EdgeInsets.symmetric(vertical: 8),
-                              //       decoration: const BoxDecoration(color: AppColors.white, shape: BoxShape.circle),
-                              //       child: const Icon(Icons.chat, color: Color(0xFF25D366), size: 16),
-                              //     ),
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                        ),
-                      ],
+                          // Positioned(
+                          //   right: -6,
+                          //   top: -6,
+                          //   bottom: -6,
+                          //   child: GestureDetector(
+                          //     onTap: _onWhatsappTap,
+                          //     child: Container(
+                          //       width: 32,
+                          //       height: 32,
+                          //       margin: const EdgeInsets.symmetric(vertical: 8),
+                          //       decoration: const BoxDecoration(color: AppColors.white, shape: BoxShape.circle),
+                          //       child: const Icon(Icons.chat, color: Color(0xFF25D366), size: 16),
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       ),
@@ -482,7 +475,7 @@ class _ListingTypeTabs extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.dotInactive,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(

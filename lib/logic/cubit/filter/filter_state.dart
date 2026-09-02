@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FilterState {
-  final String listingType; // 'Buy', 'Sell', 'Rent'
-  final String locationMode; // 'Area', 'Compound'
+  final String listingType;
+  final String locationMode;
   final String locationQuery;
   final String developerQuery;
   final Set<String> selectedCategories;
