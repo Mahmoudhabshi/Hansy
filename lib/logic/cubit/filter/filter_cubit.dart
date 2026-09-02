@@ -23,86 +23,66 @@ class FilterCubit extends Cubit<FilterState> {
 
   void toggleCategory(String category) {
     final updated = Set<String>.from(state.selectedCategories);
-    updated.contains(category) ? updated.remove(category) : updated.add(category);
+    if (updated.contains(category)) {
+      updated.remove(category);
+    } else {
+      updated.add(category);
+    }
     emit(state.copyWith(selectedCategories: updated));
   }
 
   void selectPropertyType(String type) {
-    if (state.selectedPropertyType == type) {
-      emit(state.copyWith(clearPropertyType: true));
-    } else {
-      emit(state.copyWith(selectedPropertyType: type));
-    }
+    // Tapping the already-selected type deselects it.
+    emit(state.copyWith(
+      selectedPropertyType: state.selectedPropertyType == type ? null : type,
+    ));
   }
 
-  void toggleFinishing(String option) {
-    final updated = Set<String>.from(state.selectedFinishing);
-    updated.contains(option) ? updated.remove(option) : updated.add(option);
-    emit(state.copyWith(selectedFinishing: updated));
+  void selectFinishing(String finishing) {
+    emit(state.copyWith(
+      selectedFinishing: state.selectedFinishing == finishing ? null : finishing,
+    ));
   }
 
   void toggleKeyFeature(String feature) {
     final updated = Set<String>.from(state.selectedKeyFeatures);
-    updated.contains(feature) ? updated.remove(feature) : updated.add(feature);
+    if (updated.contains(feature)) {
+      updated.remove(feature);
+    } else {
+      updated.add(feature);
+    }
     emit(state.copyWith(selectedKeyFeatures: updated));
   }
 
-  void selectSizeFrom(String? value) {
-    emit(state.copyWith(sizeFrom: value, clearSizeFrom: value == null));
+  void selectMinSize(String value) {
+    emit(state.copyWith(minSize: value));
   }
 
-  void selectSizeTo(String? value) {
-    emit(state.copyWith(sizeTo: value, clearSizeTo: value == null));
+  void selectMaxSize(String value) {
+    emit(state.copyWith(maxSize: value));
   }
 
-  void updatePriceRange(RangeValues values) {
-    emit(state.copyWith(priceRange: values));
-  }
-
-  void selectPriceMin(String? value) {
-    emit(state.copyWith(priceMin: value, clearPriceMin: value == null));
-  }
-
-  void selectPriceMax(String? value) {
-    emit(state.copyWith(priceMax: value, clearPriceMax: value == null));
+  void updatePriceRange(RangeValues range) {
+    emit(state.copyWith(priceRange: range));
   }
 
   void selectBedrooms(String value) {
-    if (state.selectedBedrooms == value) {
-      emit(state.copyWith(clearBedrooms: true));
-    } else {
-      emit(state.copyWith(selectedBedrooms: value));
-    }
+    emit(state.copyWith(
+      selectedBedrooms: state.selectedBedrooms == value ? null : value,
+    ));
   }
 
   void selectRooms(String value) {
-    if (state.selectedRooms == value) {
-      emit(state.copyWith(clearRooms: true));
-    } else {
-      emit(state.copyWith(selectedRooms: value));
-    }
+    emit(state.copyWith(
+      selectedRooms: state.selectedRooms == value ? null : value,
+    ));
   }
 
   void resetAll() {
     emit(const FilterState());
   }
 
-
-  PropertyFilterResult buildResult() {
-    return PropertyFilterResult(
-      listingType: state.listingType,
-      locationMode: state.locationMode,
-      locationQuery: state.locationQuery.trim().isEmpty ? null : state.locationQuery.trim(),
-      developer: state.developerQuery.trim().isEmpty ? null : state.developerQuery.trim(),
-      categories: state.selectedCategories,
-      propertyType: state.selectedPropertyType,
-      finishing: state.selectedFinishing,
-      keyFeatures: state.selectedKeyFeatures,
-      sizeFrom: state.sizeFrom,
-      sizeTo: state.sizeTo,
-      priceRange: state.priceRange,
-      bedrooms: state.selectedBedrooms,
-      rooms: state.selectedRooms,
-    );
+  void applyFilters() {
+    // TODO: send the current filter selections to your real search/listings API.
   }
 }

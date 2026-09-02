@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hansy/Screens/filterscreen.dart';
 import 'package:hansy/theme/constant.dart';
 import 'package:hansy/logic/cubit/home/home_cubit.dart';
 import 'package:hansy/logic/cubit/home/home_state.dart';
+import 'package:hansy/Screens/appbottomnavbar.dart';
+import 'package:hansy/Screens/filterscreen.dart';
 
 class Homescreen extends StatelessWidget {
   const Homescreen({super.key});
@@ -35,6 +36,9 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   void _onFilterTap() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const FilterScreen()),
+    );
   }
 
   void _onViewAllCategories() {}
@@ -61,224 +65,226 @@ class _HomeViewState extends State<_HomeView> {
 
           final cubit = context.read<HomeCubit>();
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          return SafeArea(
+            bottom: false,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _HomeHeader(
+                    controller: _searchController,
+                    onFilterTap: _onFilterTap,
+                    onSearchChanged: cubit.updateSearchQuery,
+                  ),
 
-                _HomeHeader(
-                  controller: _searchController,
-                  onFilterTap: _onFilterTap,
-                  onSearchChanged: cubit.updateSearchQuery,
-                ),
+                  Transform.translate(
+                    offset: const Offset(0, -20),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
 
-                Transform.translate(
-                  offset: const Offset(0, -20),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 16),
+                          if (state.promoBanner != null)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: _PromoCard(
+                                promo: state.promoBanner!,
+                                onButtonTap: _onContactUs,
+                              ),
+                            ),
 
-                        if (state.promoBanner != null)
+                          const SizedBox(height: 24),
+
+                          _SectionHeader(title: 'All Category', onViewAll: _onViewAllCategories),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 100,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              itemCount: state.categories.length,
+                              separatorBuilder: (_, __) => const SizedBox(width: 12),
+                              itemBuilder: (context, index) {
+                                return _CategoryThumbnail(category: state.categories[index]);
+                              },
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          SizedBox(
+                            height: 100,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              itemCount: state.infoCards.length,
+                              separatorBuilder: (_, __) => const SizedBox(width: 12),
+                              itemBuilder: (context, index) {
+                                return _InfoCard(info: state.infoCards[index]);
+                              },
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              'Recommended Property',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          if (state.recommendedProperties.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: _PropertyCard(
+                                property: state.recommendedProperties.first,
+                                onFavoriteTap: () => cubit.toggleFavorite(state.recommendedProperties.first.id),
+                                onCallTap: () => _onCallTap(state.recommendedProperties.first.agentPhone),
+                                onWhatsappTap: () => _onWhatsappTap(state.recommendedProperties.first.agentWhatsapp),
+                                onViewDetailsTap: _onViewPropertyDetails,
+                              ),
+                            ),
+                          const SizedBox(height: 12),
+                          Center(
+                            child: GestureDetector(
+                              onTap: _onSeeAllProperties,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('See All Properties', style: TextStyle(fontSize: 13, color: AppColors.black, fontWeight: FontWeight.w600)),
+                                  const SizedBox(width: 2),
+                                  const Icon(Icons.expand_more, size: 16, color: AppColors.black),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              'Top Developers',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 50,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              itemCount: state.topDevelopers.length,
+                              separatorBuilder: (_, __) => const SizedBox(width: 24),
+                              itemBuilder: (context, index) {
+                                return _DeveloperLogo(developer: state.topDevelopers[index]);
+                              },
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              'Top Compounds',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 150,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              itemCount: state.topCompounds.length,
+                              separatorBuilder: (_, __) => const SizedBox(width: 14),
+                              itemBuilder: (context, index) {
+                                return _CompoundCard(
+                                  compound: state.topCompounds[index],
+                                  onExploreTap: () => _onExploreCompound(state.topCompounds[index]),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Center(
+                            child: GestureDetector(
+                              onTap: _onViewAllCompounds,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('View All', style: TextStyle(fontSize: 13, color: AppColors.black, fontWeight: FontWeight.w600)),
+                                  const SizedBox(width: 2),
+                                  const Icon(Icons.expand_more, size: 16, color: AppColors.black),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: _PromoCard(
-                              promo: state.promoBanner!,
-                              onButtonTap: _onContactUs,
+                            child: _AgentVerificationCard(onVerify: cubit.verifyAgentPhone),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              'Our Services',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
                             ),
                           ),
-
-                        const SizedBox(height: 24),
-
-                        _SectionHeader(title: 'All Category', onViewAll: _onViewAllCategories),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          height: 100,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            itemCount: state.categories.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 12),
-                            itemBuilder: (context, index) {
-                              return _CategoryThumbnail(category: state.categories[index]);
-                            },
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        SizedBox(
-                          height: 100,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            itemCount: state.infoCards.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 12),
-                            itemBuilder: (context, index) {
-                              return _InfoCard(info: state.infoCards[index]);
-                            },
-                          ),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            'Recommended Property',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        if (state.recommendedProperties.isNotEmpty)
+                          const SizedBox(height: 12),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: _PropertyCard(
-                              property: state.recommendedProperties.first,
-                              onFavoriteTap: () => cubit.toggleFavorite(state.recommendedProperties.first.id),
-                              onCallTap: () => _onCallTap(state.recommendedProperties.first.agentPhone),
-                              onWhatsappTap: () => _onWhatsappTap(state.recommendedProperties.first.agentWhatsapp),
-                              onViewDetailsTap: _onViewPropertyDetails,
-                            ),
-                          ),
-                        const SizedBox(height: 12),
-                        Center(
-                          child: GestureDetector(
-                            onTap: _onSeeAllProperties,
                             child: Row(
-                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('See All Properties', style: TextStyle(fontSize: 13, color: AppColors.black, fontWeight: FontWeight.w600)),
-                                const SizedBox(width: 2),
-                                const Icon(Icons.expand_more, size: 16, color: AppColors.black),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            'Top Developers',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          height: 50,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            itemCount: state.topDevelopers.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 24),
-                            itemBuilder: (context, index) {
-                              return _DeveloperLogo(developer: state.topDevelopers[index]);
-                            },
-                          ),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            'Top Compounds',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          height: 150,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            itemCount: state.topCompounds.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 14),
-                            itemBuilder: (context, index) {
-                              return _CompoundCard(
-                                compound: state.topCompounds[index],
-                                onExploreTap: () => _onExploreCompound(state.topCompounds[index]),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: GestureDetector(
-                            onTap: _onViewAllCompounds,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('View All', style: TextStyle(fontSize: 13, color: AppColors.black, fontWeight: FontWeight.w600)),
-                                const SizedBox(width: 2),
-                                const Icon(Icons.expand_more, size: 16, color: AppColors.black),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: _AgentVerificationCard(onVerify: cubit.verifyAgentPhone),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            'Our Services',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            children: [
-                              for (int i = 0; i < state.services.length; i++) ...[
-                                Expanded(
-                                  child: _ServiceGridItem(
-                                    service: state.services[i],
-                                    onTap: () => _onServiceTap(state.services[i]),
+                                for (int i = 0; i < state.services.length; i++) ...[
+                                  Expanded(
+                                    child: _ServiceGridItem(
+                                      service: state.services[i],
+                                      onTap: () => _onServiceTap(state.services[i]),
+                                    ),
                                   ),
-                                ),
-                                if (i != state.services.length - 1) const SizedBox(width: 12),
+                                  if (i != state.services.length - 1) const SizedBox(width: 12),
+                                ],
                               ],
-                            ],
+                            ),
                           ),
-                        ),
 
-                        const SizedBox(height: 24),
+                          const SizedBox(height: 24),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: _JoinNetworkCard(
-                            onApplyTap: _onApplyToBeMember,
-                            onWhatsappTap: () => _onWhatsappTap(null),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: _JoinNetworkCard(
+                              onApplyTap: _onApplyToBeMember,
+                              onWhatsappTap: () => _onWhatsappTap(null),
+                            ),
                           ),
-                        ),
 
-                        const SizedBox(height: 24),
-                      ],
+                          const SizedBox(height: 24),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
       ),
-      bottomNavigationBar: _HomeBottomNavBar(
+      bottomNavigationBar: AppBottomNavBar(
         currentIndex: _currentNavIndex,
         onTap: _onNavTap,
       ),
@@ -286,6 +292,7 @@ class _HomeViewState extends State<_HomeView> {
   }
 }
 
+/// Maroon photo-background header with logo, title, search bar.
 class _HomeHeader extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onFilterTap;
@@ -306,19 +313,18 @@ class _HomeHeader extends StatelessWidget {
         color: AppColors.background,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
         image: DecorationImage(
-          image: const AssetImage('assets/images/'),
+          image: const AssetImage('assets/images/home/header_bg.jpg'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             AppColors.background.withOpacity(0.55),
             BlendMode.darken,
           ),
-          onError: (_, __) {},
+          onError: (_, __) {}, // falls back to the solid background color if missing
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 70,),
           Image.asset(
             'assets/images/hansy_logo.png',
             height: 20,
@@ -364,12 +370,7 @@ class _HomeHeader extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const FilterScreen(),)
-                  );
-                },
+                onTap: onFilterTap,
                 child: Container(
                   width: 46,
                   height: 46,
@@ -388,6 +389,7 @@ class _HomeHeader extends StatelessWidget {
   }
 }
 
+/// The red "Join The Hansy Circle ." promo card.
 class _PromoCard extends StatelessWidget {
   final PromoBanner promo;
   final VoidCallback onButtonTap;
@@ -404,8 +406,8 @@ class _PromoCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primaryRed,
-            AppColors.background, 
+            const Color(0xFFE23744), // brighter red
+            AppColors.background, // dark maroon
           ],
         ),
         borderRadius: BorderRadius.circular(20),
@@ -478,6 +480,7 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
+/// Rectangular photo thumbnail for a category, with label below.
 class _CategoryThumbnail extends StatelessWidget {
   final CategoryItem category;
 
@@ -517,6 +520,7 @@ class _CategoryThumbnail extends StatelessWidget {
   }
 }
 
+/// "Find Homes Near You" / "Special Investment" style info card.
 class _InfoCard extends StatelessWidget {
   final InfoCardItem info;
 
@@ -530,14 +534,7 @@ class _InfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.iconCircleBg,
         borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.iconCircleBg.withOpacity(0.7),
-            AppColors.white,
-          ],
-        ),      ),
+      ),
       child: Row(
         children: [
           Expanded(
@@ -918,79 +915,61 @@ class _ServiceGridItem extends StatelessWidget {
     );
   }
 }
+
 class _JoinNetworkCard extends StatelessWidget {
   final VoidCallback onApplyTap;
   final VoidCallback onWhatsappTap;
 
-  const _JoinNetworkCard({
-    required this.onApplyTap,
-    required this.onWhatsappTap,
-  });
+  const _JoinNetworkCard({required this.onApplyTap, required this.onWhatsappTap});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      clipBehavior: Clip.none, // allows the button to stick out
+      clipBehavior: Clip.none,
       children: [
-        // Card with elevation
-        Material(
-          elevation: 2,
-          borderRadius: BorderRadius.circular(20),
-          color: AppColors.white,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              children: [
-                const Text(
-                  'Join Our Real Estate Network',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Become a certified member and unlock exclusive tools, listings, and growth opportunities in the real estate industry.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.placeholderGrey.withOpacity(0.85),
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  height: 46,
-                  child: ElevatedButton(
-                    onPressed: onApplyTap,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryRed,
-                      foregroundColor: AppColors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Apply to be Hansy Member',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppColors.background,
+            borderRadius: BorderRadius.circular(20),
+            image: DecorationImage(
+              image: const AssetImage('assets/images/home/network_bg.jpg'),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(AppColors.background.withOpacity(0.75), BlendMode.darken),
+              onError: (_, __) {},
             ),
           ),
+          child: Column(
+            children: [
+              const Text(
+                'Join Our Real Estate Network',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Become a certified member and unlock exclusive tools, listings, and growth opportunities in the real estate industry.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: AppColors.white.withOpacity(0.85), fontSize: 12),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                height: 46,
+                child: ElevatedButton(
+                  onPressed: onApplyTap,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.white,
+                    foregroundColor: AppColors.submitRed,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Text('Apply to be Hansy Member', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                ),
+              ),
+            ],
+          ),
         ),
-
         Positioned(
           right: 12,
           bottom: -18,
@@ -999,17 +978,7 @@ class _JoinNetworkCard extends StatelessWidget {
             child: Container(
               width: 44,
               height: 44,
-              decoration: BoxDecoration(
-                color: const Color(0xFF25D366),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
+              decoration: const BoxDecoration(color: Color(0xFF25D366), shape: BoxShape.circle),
               child: const Icon(Icons.chat, color: AppColors.white),
             ),
           ),
@@ -1018,6 +987,7 @@ class _JoinNetworkCard extends StatelessWidget {
     );
   }
 }
+
 class _RoundIconButton extends StatelessWidget {
   final IconData icon;
   final Color color;
@@ -1034,56 +1004,6 @@ class _RoundIconButton extends StatelessWidget {
         height: 28,
         decoration: const BoxDecoration(color: AppColors.white, shape: BoxShape.circle),
         child: Icon(icon, size: 14, color: color),
-      ),
-    );
-  }
-}
-
-class _HomeBottomNavBar extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
-
-  const _HomeBottomNavBar({required this.currentIndex, required this.onTap});
-
-  static const _items = [
-    (icon: Icons.home_outlined, activeIcon: Icons.home, label: 'Home'),
-    (icon: Icons.explore_outlined, activeIcon: Icons.explore, label: 'Explore'),
-    (icon: Icons.bookmark_border, activeIcon: Icons.bookmark, label: 'Favorite'),
-    (icon: Icons.more_horiz, activeIcon: Icons.more_horiz, label: 'More'),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, -2)),
-        ],
-      ),
-      child: SizedBox(
-        height: 62,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(_items.length, (index) {
-            final item = _items[index];
-            final isActive = index == currentIndex;
-            final color = isActive ? AppColors.submitRed : AppColors.textGrey;
-
-            return GestureDetector(
-              onTap: () => onTap(index),
-              behavior: HitTestBehavior.opaque,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(isActive ? item.activeIcon : item.icon, color: color, size: 22),
-                  const SizedBox(height: 2),
-                  Text(item.label, style: TextStyle(fontSize: 11, color: color)),
-                ],
-              ),
-            );
-          }),
-        ),
       ),
     );
   }
