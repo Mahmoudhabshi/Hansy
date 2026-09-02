@@ -38,10 +38,14 @@ class FilterCubit extends Cubit<FilterState> {
     ));
   }
 
-  void selectFinishing(String finishing) {
-    emit(state.copyWith(
-      selectedFinishing: state.selectedFinishing == finishing ? null : finishing,
-    ));
+  void toggleFinishing(String finishing) {
+    final updated = Set<String>.from(state.selectedFinishing);
+    if (updated.contains(finishing)) {
+      updated.remove(finishing);
+    } else {
+      updated.add(finishing);
+    }
+    emit(state.copyWith(selectedFinishing: updated));
   }
 
   void toggleKeyFeature(String feature) {
@@ -54,16 +58,28 @@ class FilterCubit extends Cubit<FilterState> {
     emit(state.copyWith(selectedKeyFeatures: updated));
   }
 
-  void selectMinSize(String value) {
-    emit(state.copyWith(minSize: value));
+  void selectSizeFrom(String? value) {
+    if (value == null) return;
+    emit(state.copyWith(sizeFrom: value));
   }
 
-  void selectMaxSize(String value) {
-    emit(state.copyWith(maxSize: value));
+  void selectSizeTo(String? value) {
+    if (value == null) return;
+    emit(state.copyWith(sizeTo: value));
   }
 
   void updatePriceRange(RangeValues range) {
     emit(state.copyWith(priceRange: range));
+  }
+
+  void selectPriceMin(String? value) {
+    if (value == null) return;
+    emit(state.copyWith(priceMin: value));
+  }
+
+  void selectPriceMax(String? value) {
+    if (value == null) return;
+    emit(state.copyWith(priceMax: value));
   }
 
   void selectBedrooms(String value) {
@@ -82,7 +98,8 @@ class FilterCubit extends Cubit<FilterState> {
     emit(const FilterState());
   }
 
-  void applyFilters() {
-    // TODO: send the current filter selections to your real search/listings API.
+  /// Snapshots the current selections for the caller to run a search with.
+  PropertyFilterResult buildResult() {
+    return PropertyFilterResult.fromState(state);
   }
 }

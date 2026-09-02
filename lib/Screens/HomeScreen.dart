@@ -35,10 +35,15 @@ class _HomeViewState extends State<_HomeView> {
     super.dispose();
   }
 
-  void _onFilterTap() {
-    Navigator.of(context).push(
+  Future<void> _onFilterTap() async {
+    final result = await Navigator.of(context).push<PropertyFilterResult>(
       MaterialPageRoute(builder: (context) => const FilterScreen()),
     );
+
+    if (result != null) {
+      // TODO: use this result to query your listings/search API with the
+      // selected filters (result.listingType, result.selectedCategories, etc.)
+    }
   }
 
   void _onViewAllCategories() {}
