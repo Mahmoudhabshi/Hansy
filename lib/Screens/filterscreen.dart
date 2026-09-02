@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hansy/theme/constant.dart';
 import 'package:hansy/logic/cubit/filter/filter_cubit.dart';
 import 'package:hansy/logic/cubit/filter/filter_state.dart';
-
+import 'package:hansy/Screens/appbottomnavbar.dart';
 export 'package:hansy/logic/cubit/filter/filter_state.dart' show PropertyFilterResult;
 
 class FilterScreen extends StatelessWidget {
@@ -65,6 +65,7 @@ class _FilterViewState extends State<_FilterView> {
 
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _developerController = TextEditingController();
+  int _currentNavIndex = 0;
 
   @override
   void dispose() {
@@ -72,6 +73,8 @@ class _FilterViewState extends State<_FilterView> {
     _developerController.dispose();
     super.dispose();
   }
+
+  void _onNavTap(int index) => setState(() => _currentNavIndex = index);
 
   void _onWhatsappTap() {
     // TODO: launch WhatsApp / support chat.
@@ -419,6 +422,10 @@ class _FilterViewState extends State<_FilterView> {
             ),
           );
         },
+      ),
+      bottomNavigationBar: AppBottomNavBar(
+        currentIndex: _currentNavIndex,
+        onTap: _onNavTap,
       ),
     );
   }
