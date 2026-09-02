@@ -76,16 +76,13 @@ class _FilterViewState extends State<_FilterView> {
 
   void _onNavTap(int index) => setState(() => _currentNavIndex = index);
 
-  void _onWhatsappTap() {
-    // TODO: launch WhatsApp / support chat.
-  }
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<FilterCubit>();
 
     return Scaffold(
-      backgroundColor: AppColors.iconCircleBg,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.white,
         elevation: 0,
@@ -189,8 +186,8 @@ class _FilterViewState extends State<_FilterView> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           crossAxisCount: 4,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
                           childAspectRatio: 0.85,
                           children: _propertyTypes.map((type) {
                             final isSelected = type.label == state.selectedPropertyType;
@@ -385,7 +382,7 @@ class _FilterViewState extends State<_FilterView> {
                               SizedBox(
                                 height: 48,
                                 child: ElevatedButton(
-                                  onPressed: () => Navigator.of(context).pop(cubit.buildResult()),
+                                  onPressed: () => Navigator(),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.submitRed,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -396,21 +393,21 @@ class _FilterViewState extends State<_FilterView> {
                                   ),
                                 ),
                               ),
-                              Positioned(
-                                right: -6,
-                                top: -6,
-                                bottom: -6,
-                                child: GestureDetector(
-                                  onTap: _onWhatsappTap,
-                                  child: Container(
-                                    width: 32,
-                                    height: 32,
-                                    margin: const EdgeInsets.symmetric(vertical: 8),
-                                    decoration: const BoxDecoration(color: AppColors.white, shape: BoxShape.circle),
-                                    child: const Icon(Icons.chat, color: Color(0xFF25D366), size: 16),
-                                  ),
-                                ),
-                              ),
+                              // Positioned(
+                              //   right: -6,
+                              //   top: -6,
+                              //   bottom: -6,
+                              //   child: GestureDetector(
+                              //     onTap: _onWhatsappTap,
+                              //     child: Container(
+                              //       width: 32,
+                              //       height: 32,
+                              //       margin: const EdgeInsets.symmetric(vertical: 8),
+                              //       decoration: const BoxDecoration(color: AppColors.white, shape: BoxShape.circle),
+                              //       child: const Icon(Icons.chat, color: Color(0xFF25D366), size: 16),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -437,9 +434,7 @@ const TextStyle _sectionTitleStyle = TextStyle(
   color: AppColors.black,
 );
 
-/// ---------------------------------------------------------------------
-/// Shared building blocks
-/// ---------------------------------------------------------------------
+
 
 class _FilterCard extends StatelessWidget {
   final String title;
@@ -455,6 +450,13 @@ class _FilterCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withOpacity(0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -529,7 +531,7 @@ class _PillToggle extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.submitRed : AppColors.iconCircleBg,
+          color: isSelected ? AppColors.submitRed : AppColors.dotInactive,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Row(
@@ -598,7 +600,7 @@ class _ChoiceChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.submitRed : AppColors.iconCircleBg,
+          color: isSelected ? AppColors.submitRed : AppColors.dotInactive,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -639,6 +641,13 @@ class _PropertyTypeTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? AppColors.submitRed : AppColors.white,
           borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -715,7 +724,7 @@ class _NumberSelectorRow extends StatelessWidget {
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.submitRed : AppColors.iconCircleBg,
+                  color: isSelected ? AppColors.submitRed : AppColors.dotInactive,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 alignment: Alignment.center,

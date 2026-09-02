@@ -32,7 +32,6 @@ class FilterCubit extends Cubit<FilterState> {
   }
 
   void selectPropertyType(String type) {
-    // Tapping the already-selected type deselects it.
     emit(state.copyWith(
       selectedPropertyType: state.selectedPropertyType == type ? null : type,
     ));
@@ -98,7 +97,6 @@ class FilterCubit extends Cubit<FilterState> {
     emit(const FilterState());
   }
 
-  /// Snapshots the current selections for the caller to run a search with.
   PropertyFilterResult buildResult() {
     return PropertyFilterResult.fromState(state);
   }
